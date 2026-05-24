@@ -1,0 +1,14 @@
+management:
+  endpoints:
+    promethus:
+      enable: true
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+openapi:
+  device-service:
+    url: ${OPENAPI_DEVICE_SERVICE_URL:http://localhost:8080}

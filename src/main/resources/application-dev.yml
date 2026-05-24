@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.10.20.97:3306/iot-openapi-mngt-fat?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&serverTimezone=UTC
+    username: root
+    password: Hesung@mysql.2021
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 20
+      auto-commit: true
+      pool-name: OpenapiApiHikariCP
+      max-lifetime: 30000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  cloud:
+    discovery:
+      enabled: true
+
+eureka:
+  client:
+    enabled: true
+    defaultZone: http://10.10.20.109:2000/eureka
+    service-url:
+      defaultZone: http://10.10.20.109:2000/eureka
+
+openapi:
+  device-service:
+    url: http://localhost:8080

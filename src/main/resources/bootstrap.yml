@@ -1,0 +1,8 @@
+server:
+  port: ${port:2072}
+
+spring:
+  application:
+    name: "@artifactId@"
+  profiles:
+    active: "@activatedProfile@"
