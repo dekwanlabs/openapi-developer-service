@@ -12,3 +12,10 @@ management:
 openapi:
   device-service:
     url: ${OPENAPI_DEVICE_SERVICE_URL:http://localhost:8080}
+  requestlog:
+    enabled: true
+    # service-name 不显式配置则用 spring.application.name
+    fallback-file-path: /tmp/openapi-developer-request-log-fallback.jsonl
+    retention-days: 90
+    partition-ahead-days: 30
+

@@ -12,6 +12,8 @@ import com.hesung.openapi.developer.controller.response.DeviceResponse;
 import com.hesung.openapi.developer.controller.response.PageResponse;
 import com.hesung.openapi.developer.controller.response.ProductResponse;
 import com.hesung.openapi.developer.model.OpenPlatformCallerContext;
+import com.hesung.openapi.requestlog.annotation.ApiCall;
+import com.hesung.openapi.requestlog.annotation.LogField;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,9 +48,10 @@ public class OpenPlatformDeviceController {
      * <p>分页参数统一使用 current / size，并返回 current / size / total / pages / records。</p>
      */
     @GetMapping("/devices")
+    @ApiCall(action = "device.list")
     public PageResponse<DeviceListResponse> devices(
             OpenPlatformCallerContext callerContext,
-            @RequestParam(value = "grantId", required = false) String grantId,
+            @RequestParam(value = "grantId", required = false) @LogField("grantId") String grantId,
             PageQuery pageQuery) {
         return deviceApplicationService.queryDevicePage(callerContext, grantId, pageQuery);
     }
@@ -59,9 +62,10 @@ public class OpenPlatformDeviceController {
      * <p>详情中会包含设备基础信息、固件信息、该设备支持的标准能力以及标准化状态。</p>
      */
     @GetMapping("/devices/{deviceId}")
+    @ApiCall(action = "device.detail")
     public DeviceResponse deviceDetail(OpenPlatformCallerContext callerContext,
-                                       @PathVariable("deviceId") String deviceId,
-                                       @RequestParam(value = "grantId", required = false) String grantId) {
+                                       @PathVariable("deviceId") @LogField("deviceId") String deviceId,
+                                       @RequestParam(value = "grantId", required = false) @LogField("grantId") String grantId) {
         return deviceApplicationService.queryDeviceDetail(callerContext, deviceId, grantId);
     }
 
@@ -72,9 +76,10 @@ public class OpenPlatformDeviceController {
      * 不直接暴露内部设备字段名。</p>
      */
     @GetMapping("/devices/{deviceId}/state")
+    @ApiCall(action = "device.state.read")
     public Map<String, Object> deviceState(OpenPlatformCallerContext callerContext,
-                                           @PathVariable("deviceId") String deviceId,
-                                           @RequestParam(value = "grantId", required = false) String grantId) {
+                                           @PathVariable("deviceId") @LogField("deviceId") String deviceId,
+                                           @RequestParam(value = "grantId", required = false) @LogField("grantId") String grantId) {
         return deviceApplicationService.queryDeviceState(callerContext, deviceId, grantId);
     }
 
@@ -85,31 +90,36 @@ public class OpenPlatformDeviceController {
      * Service 层会校验能力并转换成内部 desired 控制字段。</p>
      */
     @PostMapping("/devices/{deviceId}/commands")
+    @ApiCall(action = "device.control", recordResponse = true)
     public DeviceCommandAcceptedResponse commands(OpenPlatformCallerContext callerContext,
-                                                  @PathVariable("deviceId") String deviceId,
+                                                  @PathVariable("deviceId") @LogField("deviceId") String deviceId,
                                                   @RequestBody DeviceCommandBatchRequest commandRequest) {
         return deviceApplicationService.controlDevice(callerContext, deviceId, commandRequest);
     }
 
     @GetMapping("/devices/{deviceId}/commands/{commandId}")
+    @ApiCall(action = "device.command.result")
     public DeviceCommandResultResponse commandResult(OpenPlatformCallerContext callerContext,
-                                                     @PathVariable("deviceId") String deviceId,
-                                                     @PathVariable("commandId") String commandId,
-                                                     @RequestParam(value = "grantId", required = false) String grantId) {
+                                                     @PathVariable("deviceId") @LogField("deviceId") String deviceId,
+                                                     @PathVariable("commandId") @LogField("commandId") String commandId,
+                                                     @RequestParam(value = "grantId", required = false) @LogField("grantId") String grantId) {
         return deviceApplicationService.getCommandResult(callerContext, deviceId, commandId, grantId);
     }
 
     @PostMapping("/devices/batch")
+    @ApiCall(action = "device.batch.detail")
     public List<DeviceResponse> batchDevices(OpenPlatformCallerContext callerContext, @RequestBody Map<String, Object> body) {
         return deviceApplicationService.queryBatchDevices(callerContext, body);
     }
 
     @PostMapping("/devices/states/batch")
+    @ApiCall(action = "device.batch.state.read")
     public Map<String, Map<String, Object>> batchStates(OpenPlatformCallerContext callerContext, @RequestBody Map<String, Object> body) {
         return deviceApplicationService.queryBatchStates(callerContext, body);
     }
 
     @PostMapping("/devices/resync")
+    @ApiCall(action = "device.resync")
     public Map<String, Object> resync(OpenPlatformCallerContext callerContext, @RequestBody Map<String, Object> body) {
         return deviceApplicationService.createResyncTask(callerContext, body);
     }
