@@ -1,7 +1,5 @@
 package com.hesung.openapi.developer.model;
 
-import com.hesung.openapi.developer.exception.OpenPlatformDeveloperBizExceptions;
-import com.hesung.openapi.developer.exception.OpenPlatformDeveloperErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
@@ -9,33 +7,36 @@ import org.springframework.util.StringUtils;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Request-scoped caller identity, resolved from the gateway-set
+ * Application-Context header by {@link CallerContextResolver}.
+ */
 @Getter
 @Builder
-public class OpenPlatformCallerContext {
+public class CallerContext {
 
+    /** OAuth client_id from the access token. */
     private final String clientId;
 
+    /** Application ID associated with the client. */
     private final String appId;
 
+    /** Dreo user ID. Non-null = user token; null = app token. */
     private final String userId;
 
+    /** Region from token, defaults to "US". */
     private final String region;
 
+    /** Authorized scopes. */
     private final List<String> scopes;
-
-    private final String applicationContextHeader;
 
     public boolean isUserToken() {
         return StringUtils.hasText(userId);
     }
 
-    public boolean isAppToken() {
-        return StringUtils.hasText(clientId) && !isUserToken();
-    }
-
     public String requireAppId() {
         if (!StringUtils.hasText(appId)) {
-            throw OpenPlatformDeveloperBizExceptions.of(OpenPlatformDeveloperErrorCode.APP_IDENTITY_NOT_FOUND);
+            throw new IllegalArgumentException("appId is required");
         }
         return appId;
     }
@@ -50,13 +51,5 @@ public class OpenPlatformCallerContext {
 
     public boolean hasScope(String scope) {
         return currentScopes().contains(scope);
-    }
-
-    public String stableUserId() {
-        return StringUtils.hasText(userId) ? userId : "current-user";
-    }
-
-    public String stableAppId() {
-        return StringUtils.hasText(appId) ? appId : "current-app";
     }
 }

@@ -42,7 +42,7 @@
 
         <dependency>
             <groupId>com.hesung.openapi</groupId>
-            <artifactId>openapi-request-log</artifactId>
+            <artifactId>openapi-console-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

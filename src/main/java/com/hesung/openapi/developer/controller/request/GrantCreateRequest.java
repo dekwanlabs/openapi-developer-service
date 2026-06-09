@@ -2,21 +2,23 @@ package com.hesung.openapi.developer.controller.request;
 
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class GrantCreateRequest {
 
+    /** Dreo user ID. Required. */
     private String userId;
 
-    private String userAccount;
-
+    /** User region, e.g. "US". Optional, defaults to "US". */
     private String region;
 
+    /** "all_devices" or "selected_devices". Required. */
     private String grantScopeType;
 
-    private List<String> deviceIds = new ArrayList<>();
+    /** Device IDs when grantScopeType = selected_devices. */
+    private List<String> deviceIds;
 
-    private List<String> scopes = new ArrayList<>();
+    /** Scopes, e.g. ["device.read", "device.control"]. Required. */
+    private List<String> scopes;
 }
