@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class DeveloperWebMvcConfig implements WebMvcConfigurer {
 
     private final CallerContextResolver callerContextResolver;
 
-    public WebMvcConfig(CallerContextResolver callerContextResolver) {
+    public DeveloperWebMvcConfig(CallerContextResolver callerContextResolver) {
         this.callerContextResolver = callerContextResolver;
     }
 
